@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import * as yup from 'yup';
+import { Formik } from 'formik';
 
 const schema = yup.object({
     name: yup
@@ -23,28 +24,71 @@ const schema = yup.object({
         .required('Your message is required!')
 });
 
+const handleFormData = (values, actions) => { console.log(values); }
+
 const MessageForm = () => {
     return (
-        <Card className="mb-4">
-            <Form>
-                <Card.Body>
-                    <Card.Title>Add a Message:</Card.Title>
-                    <Row className="align-items-center">
-                        <Form.Group controlId="name" as={Col}>
-                            <Form.Label>Enter Name:</Form.Label>
-                            <Form.Control type="textarea" name="name" placeholder="Your name" /> 
-                        </Form.Group>
-                        <Form.Group controlId="msg" as={Col} md={6}>
-                            <Form.Label>Enter Message:</Form.Label>
-                            <Form.Control type ="textarea" name="message" placeholder="Your message" />
-                        </Form.Group>
-                        <Col>
-                            <Button variant="primary" type="submit" className="mt-3">Submit</Button>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Form>
-        </Card>
+        <Formik
+            validationSchema={schema}
+            onSubmit={handleFormData}
+            initialValues={{ name: '', msg: '' }}
+        >
+            {
+                ({
+                    handleSubmit,
+                    handleChange,
+                    handleBlur,
+                    values,
+                    touched,
+                    errors,
+                }) => (
+                    <Card className="mb-4">
+                        <Form onSubmit={handleSubmit} noValidate>
+                            <Card.Body>
+                                <Card.Title>Add a Message:</Card.Title>
+                                <Row className="align-items-center">
+                                    <Form.Group controlId="name" as={Col}>
+                                        <Form.Label>Enter Name:</Form.Label>
+                                        <Form.Control 
+                                            type="textarea"
+                                            name="name"
+                                            placeholder="Your name"
+                                            value={values.name}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            isValid={touched.name && !errors.name}
+                                            isInvalid={touched.name && errors.name}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.name}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group controlId="msg" as={Col} md={6}>
+                                        <Form.Label>Enter Message:</Form.Label>
+                                        <Form.Control 
+                                            type ="textarea"
+                                            name="msg"
+                                            placeholder="Your message"
+                                            value={values.msg}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            isValid={touched.msg && !errors.msg}
+                                            isInvalid={touched.msg && errors.msg}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.msg}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Col>
+                                        <Button variant="primary" type="submit" className="mt-3">Submit</Button>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                        </Form>
+                    </Card>
+                )
+            }
+        </Formik>
     );
 }
 

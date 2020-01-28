@@ -1,16 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 
-const Footer = ({ className, footer }) => {
+const Footer = ({ footer }) => {
     return (
-    <div className={className}>{footer}</div>
+    <div className="text-right">{footer}</div>
     );
 }
 
-const StyledFooter = styled(Footer)`
-    width: 100%;
-    text-align: right;
-    font-size: 1em;
-`;
-
-export default StyledFooter;
+export default Footer;

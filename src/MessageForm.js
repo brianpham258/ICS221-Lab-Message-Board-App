@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -16,7 +15,7 @@ const schema = yup.object({
         .max(10, 'Your name cannot be more than 10 characters!')
         .matches(/[a-zA-Z]{2,}/, 'Invalid name. Use Upper or Lowercase letter only!')
         .required('Your name is required!'),
-    msg: yup
+    message: yup
         .string()
         .trim()
         .min(3, 'Your message must be at least 3 characters!')
@@ -24,14 +23,18 @@ const schema = yup.object({
         .required('Your message is required!')
 });
 
-const handleFormData = (values, actions) => { console.log(values); }
+const MessageForm = ({handleCallback}) => {
+    const handleFormData = (values, actions) => { 
+        handleCallback(values)
+        actions.setSubmitting(false);
+        console.log(values);
+    };
 
-const MessageForm = () => {
     return (
         <Formik
             validationSchema={schema}
             onSubmit={handleFormData}
-            initialValues={{ name: '', msg: '' }}
+            initialValues={{ name: '', message: '' }}
         >
             {
                 ({
@@ -63,20 +66,20 @@ const MessageForm = () => {
                                             {errors.name}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="msg" as={Col} md={6}>
+                                    <Form.Group controlId="message" as={Col} md={6}>
                                         <Form.Label>Enter Message:</Form.Label>
                                         <Form.Control 
                                             type ="textarea"
-                                            name="msg"
+                                            name="message"
                                             placeholder="Your message"
-                                            value={values.msg}
+                                            value={values.message}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isValid={touched.msg && !errors.msg}
-                                            isInvalid={touched.msg && errors.msg}
+                                            isValid={touched.message && !errors.message}
+                                            isInvalid={touched.message && errors.message}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.msg}
+                                            {errors.message}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Col>
@@ -92,8 +95,4 @@ const MessageForm = () => {
     );
 }
 
-const StyledMessageForm = styled(MessageForm)`
-    width: 100%;
-`;
-
-export default StyledMessageForm;
+export default MessageForm;

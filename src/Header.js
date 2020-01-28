@@ -1,17 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
-const Header = ({ className, header }) => {
+const Header = ({ header }) => {
     return (
-        <div className={className}>{header}</div>
+        <Jumbotron><h1>{header}</h1></Jumbotron>
     );
 }
 
-const StyledHeader = styled(Header)`
-    padding: 30px 30px 40px 30px;
-    background-color: #cccccc;
-    width: 100%;
-    font-size: 2em;
-`;
-
-export default StyledHeader;
+export default Header;

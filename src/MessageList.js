@@ -1,9 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
-import Message from './Message';
 import Table from 'react-bootstrap/Table';
 
+var num = 0;
+
+const Message = ({ name, message }) => {
+    return (
+        <tr>
+            <td>{num += 1}</td>
+            <td>{name}</td>
+            <td>{message}</td>
+        </tr>
+    );
+}
+
 const MessageList = ({ className, messages }) => {
+    num = 0;
     return (
         <Table className={className}>
             <thead>
@@ -13,25 +24,11 @@ const MessageList = ({ className, messages }) => {
             </thead>
             <tbody>
                 {messages.map(message => (
-                    <Message key={message.id} {...message}/>
+                    <Message key={num} {...message}/>
                 ))}
             </tbody>
         </Table>
     );
 }
 
-const StyledMessageList = styled(MessageList)`
-    width: 100%;
-
-    th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(odd) {
-        background-color: #dddddd;
-    }
-`;
-
-export default StyledMessageList;
+export default MessageList;

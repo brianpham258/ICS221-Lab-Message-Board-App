@@ -10,13 +10,29 @@ import Col from 'react-bootstrap/Col';
 
 const App = () => {
   const [messages, setMessage] = React.useState([ 
-    { "name": "Bill", "message": "Hi All!" },
-    { "name": "Ann", "message": "ICS 221 is fun!" },
-    { "name": "Johnny", "message": "I'm stranded!" },
-    { "name": "Barb", "message": "Hi" },
-    { "name": "Frank", "message": "Who's tired?" },
-    { "name": "Sarah", "message": "I heart React" }
+    // { "name": "Bill", "message": "Hi All!" },
+    // { "name": "Ann", "message": "ICS 221 is fun!" },
+    // { "name": "Johnny", "message": "I'm stranded!" },
+    // { "name": "Barb", "message": "Hi" },
+    // { "name": "Frank", "message": "Who's tired?" },
+    // { "name": "Sarah", "message": "I heart React" }
   ]);
+
+  React.useEffect( () => {
+    (async () => {
+      try {
+        const response = await fetch('http://10.21.75.47:3004/messages');
+
+        if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+        const result = await response.json();
+
+        setMessage(result);
+      } catch (error) {
+        console.log('Fetch API Error: ' + error);
+      }
+    })();
+  },[]);
 
   const callBack = (values) => {
     // messages.unshift(values);

@@ -37,7 +37,20 @@ const App = () => {
   const callBack = (values) => {
     // messages.unshift(values);
     setMessage([values, ...messages]);
-    console.log(messages);
+
+    (async () => {
+      try {
+        const request = await fetch('http://10.21.75.47:3004/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json'},
+          body: JSON.stringify(values),
+        });
+
+        if(!request.ok) throw Error(request.status + ': ' + request.statusText);
+      } catch (error) {
+        console.log('Post PI Error: ' + error);
+      }
+    })();
   }
 
   return (

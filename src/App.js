@@ -34,6 +34,9 @@ const App = () => {
     })();
   },[]);
 
+  const userCredentials = { username: 'test', password: 'test1234' };
+  const basicString = `${userCredentials.username}:${userCredentials.password}`
+
   const callBack = (values) => {
     // messages.unshift(values);
     setMessage([values, ...messages]);
@@ -42,7 +45,10 @@ const App = () => {
       try {
         const request = await fetch('http://10.21.75.47:3004/messages', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(basicString)}`
+          },
           body: JSON.stringify(values),
         });
 

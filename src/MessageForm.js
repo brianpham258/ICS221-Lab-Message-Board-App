@@ -27,7 +27,7 @@ const MessageForm = ({handleCallback}) => {
     const handleFormData = (values, actions) => { 
         handleCallback(values)
         actions.setSubmitting(false);
-        console.log(values);
+        // console.log(values);
     };
 
     return (

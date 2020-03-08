@@ -1,81 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Header from './Header';
 import Footer from './Footer';
-import MessageList from './MessageList';
-import MessageForm from './MessageForm.js';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import MessagePage from './MessagePage';
+import LoginPage from './LoginPage';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect
+} from 'react-router-dom';
+
+const PageLayout = ({ children, header }) => (
+    <Container>
+        <Row>
+            <Col><Header header={header} /></Col>
+        </Row>
+        {children}
+        <Row>
+            <Col><Footer footer="&copy; Quang Pham" /></Col>
+        </Row>
+    </Container>
+);
 
 const App = () => {
-  const [messages, setMessage] = React.useState([ 
-    // { "name": "Bill", "message": "Hi All!" },
-    // { "name": "Ann", "message": "ICS 221 is fun!" },
-    // { "name": "Johnny", "message": "I'm stranded!" },
-    // { "name": "Barb", "message": "Hi" },
-    // { "name": "Frank", "message": "Who's tired?" },
-    // { "name": "Sarah", "message": "I heart React" }
-  ]);
+    const [userCredential, setUserCredential] = useState();
+    const handleLoggedIn = (username, password) => {
+        setUserCredential({ username, password });
+    };
 
-  React.useEffect( () => {
-    (async () => {
-      try {
-        const response = await fetch('http://10.21.75.47:3004/messages');
+    return (
+        <Router>
+            <Switch>
+                <Route exact path="/" render={() => {
+                    return <Redirect to="/login" />
+                }} />
+                <Route exact path="/login">
+                    <PageLayout header="Message Board App Login">
+                        <LoginPage onLoggedIn={handleLoggedIn} />
+                    </PageLayout>
+                </Route>
+                <Route exact path="/messages" render={() => {
+                    if (!userCredential)
+                        return <Redirect to="/login" />
 
-        if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+                    return (
+                        <PageLayout header="ICS 221 Message Board App">
+                            <MessagePage userCredential={userCredential} />
+                        </PageLayout>
+                    )
+                }}>
 
-        const result = await response.json();
-
-        setMessage(result);
-      } catch (error) {
-        console.log('Fetch API Error: ' + error);
-      }
-    })();
-  },[]);
-
-  const userCredentials = { username: 'test', password: 'test1234' };
-  const basicString = `${userCredentials.username}:${userCredentials.password}`
-
-  const callBack = (values) => {
-    // messages.unshift(values);
-    setMessage([values, ...messages]);
-
-    (async () => {
-      try {
-        const request = await fetch('http://10.21.75.47:3004/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(basicString)}`
-          },
-          body: JSON.stringify(values),
-        });
-
-        if(!request.ok) throw Error(request.status + ': ' + request.statusText);
-      } catch (error) {
-        console.log('Post PI Error: ' + error);
-      }
-    })();
-  }
-
-  return (
-    <Container>
-      <Row>
-        <Col><Header header="ICS 221 Message Board App" /></Col>
-      </Row>
-      <br/>
-      <MessageForm handleCallback={callBack}/>
-      <br/>
-      <Row>
-        <Col><MessageList messages={messages}/></Col>
-      </Row>
-      <br/>
-      <Row>
-        <Col><Footer footer="&copy; Quang Pham" /></Col>
-      </Row>
-    </Container>
-  );
-}
+                </Route>
+            </Switch>
+        </Router>
+    );
+};
 
 export default App;

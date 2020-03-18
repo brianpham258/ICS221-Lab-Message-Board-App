@@ -28,13 +28,16 @@ const LoginPage = ({ onLoggedIn, history }) => {
     const handleFormData = (values, actions) => {
         (async () => {
             try {
-                const request = await fetch('http://10.21.75.47:3004/users/login', {
+                const request = await fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(values),
                 });
+
+                const result = await request.json();
+                sessionStorage.setItem('token', result.token);
                 
                 if(request.ok) {
                     onLoggedIn(values.username, values.password);

@@ -10,7 +10,7 @@ const MessagePage = ({userCredential}) => {
     React.useEffect( () => {
       (async () => {
         try {
-          const response = await fetch('http://10.21.75.47:3004/messages');
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`);
   
           if(!response.ok) throw Error(response.status + ': ' + response.statusText);
   
@@ -23,7 +23,7 @@ const MessagePage = ({userCredential}) => {
       })();
     },[]);
   
-    const basicString = `${userCredential.username}:${userCredential.password}`
+    // const basicString = `${userCredential.username}:${userCredential.password}`
 
     const callBack = (values) => {
       // messages.unshift(values);
@@ -31,11 +31,11 @@ const MessagePage = ({userCredential}) => {
   
       (async () => {
         try {
-          const request = await fetch('http://10.21.75.47:3004/messages', {
+          const request = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Basic ${btoa(basicString)}`
+              'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             body: JSON.stringify(values),
           });
